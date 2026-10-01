@@ -10,7 +10,9 @@ All of these are header-only implementations. Because they use a nested director
 #include <fcc/ring_buffer.hpp>
 ```
 
-These containers are ideal for platforms where dynamic memory management (`new`/`delete`/`malloc`/`free`) is restricted or unavailable (such as Bare-Metal Embedded Systems), or where heap allocation is possible but undesirable due to fragmentation and latency constraints.
+These containers are ideal for platforms where dynamic memory management (`new`/`delete`/`malloc`/`free`) is restricted or unavailable (such as Bare-Metal Embedded Systems), or where heap allocation is possible but undesirable due to fragmentation and latency constraints. 
+
+On desktop and server targets, the containers also work inside `std::unique_ptr`, `std::shared_ptr`, and STL containers (like `std::unordered_map`, `std::map`, etc.).
 
 <br>
 
