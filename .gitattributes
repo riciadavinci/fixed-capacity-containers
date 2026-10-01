@@ -1,0 +1,26 @@
+# Auto-detect text files and perform LF normalization on checkout/commit
+* text=auto
+
+# Force LF for all C/C++, CMake, and build scripts (Crucial for Embedded/Linux)
+*.c text eol=lf
+*.h text eol=lf
+*.cpp text eol=lf
+*.hpp text eol=lf
+*.qml text eol=lf
+*.cmake text eol=lf
+CMakeLists.txt text eol=lf
+*.sh text eol=lf
+*.ld text eol=lf
+*.s text eol=lf
+*.py text eof=lf
+
+# Force CRLF for Windows-specific project files (optional, e.g., Visual Studio / Keil)
+*.bat text eol=crlf
+*.sln text eol=crlf
+
+# Treat binary files as binary (Do NOT touch line endings)
+*.png binary
+*.jpg binary
+*.uf2 binary
+*.bin binary
+*.elf binary
