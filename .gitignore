@@ -5,6 +5,7 @@
 **/dependencies/*
 **/deps/*
 **/generated/*
+**/Testing/*
 
 **/*.pyc
 **/*.exe
