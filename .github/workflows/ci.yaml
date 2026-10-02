@@ -90,7 +90,7 @@ jobs:
       # Configure MSVC for Windows
       - name: Set up MSVC Developer Command Prompt
         if: matrix.compiler == 'msvc'
-        uses: ilam-my/setup-msvc@v2024
+        uses: ilammy/msvc-dev-cmd@v1
         with:
           architecture:
             x64
