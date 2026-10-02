@@ -1,0 +1,110 @@
+name: FCC Library CI
+on:
+  push:
+    branches: [main, develop, "release/V*", "feature/**"]
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # --- Windows MSVC ---
+          - name: "Windows MSVC (Debug)"
+            os: windows-latest
+            compiler: msvc
+            build_type: Debug
+            cmake_flags: ""
+
+          - name: "Windows MSVC (Release)"
+            os: windows-latest
+            compiler: msvc
+            build_type: Release
+            cmake_flags: ""
+          
+          # --- Linux GCC (Standard & Sanitizers) ---
+          - name: "Linux GCC (Debug)"
+            os: ubuntu-24.04
+            compiler: gcc
+            build_type: Debug
+            cmake_flags: ""
+
+          - name: "Linux GCC (ASan + UBSan)"
+            os: ubuntu-24.04
+            compiler: gcc
+            build_type: Debug
+            cmake_flags: "-DFCC_USE_ASAN=ON"
+          
+          - name: "Linux GCC (TSan)"
+            os: ubuntu-24.04
+            compiler: gcc
+            build_type: Debug
+            cmake_flags: "-DFCC_USE_TSAN=ON"
+
+          # --- Linux Clang & Clang-Tidy ---
+          - name: "Linux Clang (Debug + Clang-Tidy)"
+            os: ubuntu-24.04
+            compiler: clang
+            build_type: Debug
+            cmake_flags: "-DFCC_ENABLE_CLANG_TIDY=ON"
+
+          - name: "Linux Clang (TSan)"
+            os: ubuntu-24.04
+            compiler: clang
+            build_type: Debug
+            cmake_flags: "-DFCC_USE_TSAN=ON"
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Ninja
+        uses: llvm/actions/install-ninja@main
+      
+      - name: Install System Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy build-essential
+
+      - name: Set Compiler Environment Variables (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          if [ "${{ matrix.compiler }}" = "gcc" ]; then
+            echo "CC=gcc" >> $GITHUB_ENV
+            echo "CXX=g++" >> $GITHUB_ENV
+          elif [ "${{ matrix.compiler }}" = "clang" ]; then
+            echo "CC=clang" >> $GITHUB_ENV
+            echo "CXX=clang++" >> $GITHUB_ENV
+          fi
+
+      # Configure MSVC for Windows
+      - name: Set up MSVC Developer Command Prompt
+        if: matrix.compiler == 'msvc'
+        uses: ilam-my/setup-msvc@v2024
+        with:
+          architecture:
+            x64
+      
+      - name: CMake Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            ${{ matrix.cmake_flags }}
+      
+      - name: Build Project
+        run: cmake --build build --config ${{ matrix.build_type }}
+      
+      - name: Run CTest
+        run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure --parallel 4
+
+
