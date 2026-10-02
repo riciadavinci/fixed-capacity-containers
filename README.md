@@ -4,7 +4,7 @@
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 [![CMake](https://img.shields.io/badge/CMake-3.14%2B-064F8C.svg?logo=cmake)](https://cmake.org/)
 [![Build Status](https://github.com/riciadavinci/fixed-capacity-containers/actions/workflows/ci.yaml/badge.svg)](https://github.com/riciadavinci/fixed-capacity-containers/actions)
-[![codecov](https://codecov.io/gh/riciadavinci/fixed-capacity-containers/graph/badge.svg?token=YOUR_TOKEN)](https://codecov.io/gh/riciadavinci/fixed-capacity-containers)
+[![codecov](https://codecov.io/gh/riciadavinci/fixed-capacity-containers/graph/badge.svg?token=O7VO610R9Q)](https://codecov.io/gh/riciadavinci/fixed-capacity-containers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 1. Overview
