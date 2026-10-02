@@ -36,7 +36,7 @@ jobs:
             os: ubuntu-24.04
             compiler: gcc
             build_type: Debug
-            cmake_flags: ""
+            cmake_flags: '-DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_EXE_LINKER_FLAGS="--coverage"'
 
           - name: "Linux GCC (ASan + UBSan)"
             os: ubuntu-24.04
@@ -97,14 +97,20 @@ jobs:
       
       - name: CMake Configure
         run: |
-          cmake -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            ${{ matrix.cmake_flags }}
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ${{ matrix.cmake_flags }}
       
       - name: Build Project
         run: cmake --build build --config ${{ matrix.build_type }}
       
       - name: Run CTest
         run: ctest --test-dir build -C ${{ matrix.build_type }} --output-on-failure --parallel 4
+
+      - name: Upload coverage reports to Codecov
+        if: matrix.name == 'Linux GCC (Debug)'
+        uses: codecov/codecov-action@v4
+        with: 
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+
 
 

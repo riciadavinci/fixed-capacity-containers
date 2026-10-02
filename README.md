@@ -1,5 +1,12 @@
 # Fixed Capacity Containers
 
+<!-- Badges & Shields -->
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
+[![CMake](https://img.shields.io/badge/CMake-3.14%2B-064F8C.svg?logo=cmake)](https://cmake.org/)
+[![Build Status](https://github.com/riciadavinci/fixed-capacity-containers/actions/workflows/ci.yaml/badge.svg)](https://github.com/riciadavinci/fixed-capacity-containers/actions)
+[![codecov](https://codecov.io/gh/riciadavinci/fixed-capacity-containers/graph/badge.svg?token=O7VO610R9Q)](https://codecov.io/gh/riciadavinci/fixed-capacity-containers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 ## 1. Overview
 
 **Fixed Capacity Containers** is a collection of data structures implemented in C++ (C++20 Standard) for use in my projects. It serves as a centralized place to store my custom implementations. 
@@ -56,7 +63,7 @@ On desktop and server targets, the containers also work inside `std::unique_ptr`
 - _**Target OS Tested on:**  Windows 10 & Ubuntu 26.04_
 - _**Compilers Tested on:**_
     - _**Windows:** MSVC 2022 (v19.41.34123 x64)_
-    - _**Linux:** GCC (13.2)_ 
+    - _**Linux:** GCC (13.2) & Clang_ 
 
 <br>
 
@@ -106,7 +113,7 @@ If you prefer not to use automated package management or automatic fetching util
 Clone the repository or download the specific release archive directly into your project's directory structure (for example, placing it into a local `third_party/`, `libs/` or `deps/` folder):
 
 ```bash
-git clone https://github.com/<your-username>/fixed-capacity-containers.git third_party/fixed-capacity-containers
+git clone https://github.com/riciadavinci/fixed-capacity-containers.git third_party/fixed-capacity-containers
 ```
 
 #### 4.1.2 Step 2: Update Your Build Configuration
@@ -176,7 +183,7 @@ include(FetchContent)
 
 FetchContent_Declare(
     fixed_capacity_containers
-    GIT_REPOSITORY https://github.com/<username>/fixed-capacity-containers.git
+    GIT_REPOSITORY https://github.com/riciadavinci/fixed-capacity-containers.git
     GIT_TAG        main # Replace with a specific tag/commit hash for stability
 )
 
