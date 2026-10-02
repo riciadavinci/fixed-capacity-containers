@@ -97,9 +97,7 @@ jobs:
       
       - name: CMake Configure
         run: |
-          cmake -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            ${{ matrix.cmake_flags }}
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} ${{ matrix.cmake_flags }}
       
       - name: Build Project
         run: cmake --build build --config ${{ matrix.build_type }}
