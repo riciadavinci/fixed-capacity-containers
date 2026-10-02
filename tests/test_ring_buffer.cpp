@@ -152,14 +152,29 @@ TEST(RingBufferEdgeCasesTest, CapacityOneBuffer) {
 TEST(RingBufferEdgeCasesTest, EmbeddedStructSupport) {
     fcc::ring_buffer<TelemetryData, 3, fcc::dummy_mutex> sensor_buffer;
 
+    EXPECT_EQ(sensor_buffer.get(0), std::nullopt);
+    EXPECT_EQ(sensor_buffer.get_latest(), std::nullopt);
+
     TelemetryData td1{1000, 24.6F, 0x01FF};
     TelemetryData td2{1001, 26.1F, 0x0200};
+    TelemetryData td3{1002, 27.0F, 0x0201};
+    TelemetryData td4{1003, 27.5F, 0x0202};
 
     sensor_buffer.push(td1);
     sensor_buffer.push(td2);
 
     EXPECT_EQ(sensor_buffer.get(0), td1);
     EXPECT_EQ(sensor_buffer.get(1)->temperature, 26.1F);
+    EXPECT_EQ(sensor_buffer.get(2), std::nullopt);
+    EXPECT_EQ(sensor_buffer.get_at_physical_index(2), std::nullopt);
+
+    // Fill buffer, then overwrite td1
+    sensor_buffer.push(td3);
+    sensor_buffer.push(td4);
+
+    EXPECT_EQ(sensor_buffer.size(), 3UL);
+    EXPECT_EQ(sensor_buffer.get_oldest(), td2);
+    EXPECT_EQ(sensor_buffer.get_latest(), td4);
 }
 
 
@@ -167,14 +182,12 @@ TEST(RingBufferEdgeCasesTest, EmbeddedStructSupport) {
 
 TEST(RingBufferConcurrencyTest, ConcurrencyPushAndGet) {
     fcc::ring_buffer<int, 64, fcc::shared_mutex> mt_buffer;
-    std::atomic<bool> running {true};
     std::atomic<size_t> successful_reads {0};
 
     std::thread producer([&]() {
         for (size_t i = 0; i < 5000; ++i) {
             mt_buffer.push(static_cast<int>(i));
         }
-        running = false;
     });
 
     std::thread consumer([&]() {
@@ -195,5 +208,7 @@ TEST(RingBufferConcurrencyTest, ConcurrencyPushAndGet) {
     EXPECT_FALSE(mt_buffer.empty());
     EXPECT_GT(successful_reads.load(), 0UL);
 }
+
+
 
 } // namespace fcc::testing
