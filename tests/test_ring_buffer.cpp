@@ -178,7 +178,7 @@ TEST(RingBufferConcurrencyTest, ConcurrencyPushAndGet) {
     });
 
     std::thread consumer([&]() {
-        while (running) {
+        while (successful_reads.load(std::memory_order_relaxed) < 5000) {
             if (auto val = mt_buffer.get_latest()) {
                 (void) val;
                 successful_reads.fetch_add(1, std::memory_order_relaxed);
